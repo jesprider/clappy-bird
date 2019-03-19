@@ -1,17 +1,37 @@
-import * as pixi from 'pixi.js';
+import {
+  Application, Container, Sprite, Loader,
+} from 'pixi.js';
+
 import getMedia from './mic';
 import Bird from './bird';
 import Pipe from './pipe';
 
+import catImagePath from './assets/cat.png';
+import spriteImagePath from './assets/sprite.png';
+
+const STAGE_WIDTH = 1020;
+const STAGE_HEIGHT = 600;
+
 window.onload = () => {
   //
   // App creation
-  const app = new pixi.Application({ width: 1020, height: 600, backgroundColor: '0x00c3cc' });
-  const birdContainer = new pixi.Container();
-  const pipesContainer = new pixi.Container();
+  const app = new Application({ width: STAGE_WIDTH, height: STAGE_HEIGHT, backgroundColor: '0x00c3cc' });
+  const birdContainer = new Container();
+  const pipesContainer = new Container();
   app.stage.addChild(pipesContainer);
   app.stage.addChild(birdContainer);
   document.body.appendChild(app.view);
+
+  //
+  // Sprite initialization
+  Loader.shared
+    .add('cat', catImagePath)
+    .load((loader, resources) => {
+      const sprite = new Sprite(
+        resources.cat.texture,
+      );
+      app.stage.addChild(sprite);
+    });
 
   //
   // Sliders handling
@@ -33,7 +53,7 @@ window.onload = () => {
   //
   // Bird creation
   const bird = new Bird({
-    x: 45, y: 25, radius: 25, canvasHeight: app.view.height,
+    x: 45, y: 25, radius: 25, canvasHeight: STAGE_HEIGHT,
   });
   birdContainer.addChild(bird.bird);
 
@@ -41,7 +61,7 @@ window.onload = () => {
   // Pipes
   const pipes = [];
   setInterval(() => {
-    const pipe = new Pipe({ canvasWidth: app.view.width, canvasHeight: app.view.height });
+    const pipe = new Pipe({ canvasWidth: STAGE_WIDTH, canvasHeight: STAGE_HEIGHT });
     pipes.push(pipe);
     pipesContainer.addChild(pipe.pipe);
   }, 2500);
