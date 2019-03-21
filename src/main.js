@@ -1,5 +1,5 @@
 import {
-  Application, Container, Sprite, Loader,
+  Application, Container, Sprite, Loader, Rectangle,
 } from 'pixi.js';
 
 import getMedia from './mic';
@@ -7,7 +7,8 @@ import Bird from './bird';
 import Pipe from './pipe';
 
 import catImagePath from './assets/cat.png';
-import spriteImagePath from './assets/sprite.png';
+import tilesetImagePath from './assets/tileset.png';
+import tilesetJson from './assets/tileset.json';
 
 const STAGE_WIDTH = 1020;
 const STAGE_HEIGHT = 600;
@@ -26,11 +27,26 @@ window.onload = () => {
   // Sprite initialization
   Loader.shared
     .add('cat', catImagePath)
+    .add('tileset', tilesetImagePath)
     .load((loader, resources) => {
-      const sprite = new Sprite(
+      const cat = new Sprite(
         resources.cat.texture,
       );
-      app.stage.addChild(sprite);
+      app.stage.addChild(cat);
+
+      // Tileset loading
+      const tilesetTexture = resources.tileset.texture;
+      const {
+        x, y, width, height,
+      } = tilesetJson[78];
+      const rectangle = new Rectangle(x, y, width, height);
+      tilesetTexture.frame = rectangle;
+      const bird = new Sprite(tilesetTexture);
+
+      bird.x = 50;
+      bird.y = 50;
+
+      app.stage.addChild(bird);
     });
 
   //
