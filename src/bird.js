@@ -1,16 +1,14 @@
-import * as pixi from 'pixi.js';
+import { Sprite } from 'pixi.js';
 
 export default class Bird {
-  constructor({ x, y, radius, canvasHeight }) {
-    const bird = new pixi.Graphics();
-    bird.lineStyle(0);
-    bird.beginFill(0xDE3249, 1);
-    bird.drawCircle(x, y, radius);
-    bird.endFill();
+  constructor({
+    x, y, texture, stageHeight,
+  }) {
+    const bird = new Sprite(texture);
+    bird.position.set(x, y);
 
     this.bird = bird;
-    this.radius = radius;
-    this.height = canvasHeight;
+    this.stageHeight = stageHeight;
 
     this.gravity = 0.6;
     this.lift = -1;
@@ -18,7 +16,7 @@ export default class Bird {
   }
 
   up(volume) {
-    console.log(volume / 100)
+    console.log(volume / 100);
     this.velocity -= volume / 100;
   }
 
@@ -27,8 +25,8 @@ export default class Bird {
     this.velocity *= 0.9;
     this.bird.y += this.velocity;
 
-    if (this.bird.y > this.height - this.radius * 2) {
-      this.bird.y = this.height - this.radius * 2;
+    if (this.bird.y > this.stageHeight - this.bird.height) {
+      this.bird.y = this.stageHeight - this.bird.height;
       this.velocity = 0;
     }
 
