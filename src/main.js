@@ -1,5 +1,5 @@
 import {
-  Application, Container, Loader, Rectangle, Texture,
+  Application, Container, Loader, Rectangle, Texture, TilingSprite,
 } from 'pixi.js';
 
 import getMedia from './mic';
@@ -36,20 +36,42 @@ const getBirdTextures = (tilesetBaseTexture, tilesetData) => {
   return birdTextures;
 };
 
+const getBgTexture = (tilesetBaseTexture, tilesetData) => {
+  const {
+    x, y, width, height,
+  } = tilesetData[0];
+
+  const texture = new Texture(tilesetBaseTexture);
+  const rectangle = new Rectangle(x, y, width, height);
+  texture.frame = rectangle;
+
+  return texture;
+};
+
 window.onload = () => {
   const setup = (loader, resources) => {
+    const tilesetBaseTexture = resources.tileset.texture.baseTexture;
+
     //
     // App initialization
     const app = initializeApp();
 
+    const gameScene = new Container();
     const birdContainer = new Container();
     const pipesContainer = new Container();
+    app.stage.addChild(gameScene);
     app.stage.addChild(pipesContainer);
     app.stage.addChild(birdContainer);
 
     //
+    // Bg creation
+    const bgTexture = getBgTexture(tilesetBaseTexture, tilesetJson);
+    const bg = new TilingSprite(bgTexture, STAGE_WIDTH, STAGE_HEIGHT);
+    gameScene.addChild(bg);
+
+    //
     // Bird creation
-    const birdTextures = getBirdTextures(resources.tileset.texture.baseTexture, tilesetJson);
+    const birdTextures = getBirdTextures(tilesetBaseTexture, tilesetJson);
     const bird = new Bird({
       x: 45, y: 25, textures: birdTextures, stageHeight: STAGE_HEIGHT,
     });
@@ -83,6 +105,7 @@ window.onload = () => {
     //
     // App update callback
     app.ticker.add(() => {
+      bg.tilePosition.x -= 2;
       if (vol > thresholdTop) {
         bird.up(vol);
       }
