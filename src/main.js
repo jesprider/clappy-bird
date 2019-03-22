@@ -12,50 +12,48 @@ import tilesetJson from './assets/tileset.json';
 const STAGE_WIDTH = 1020;
 const STAGE_HEIGHT = 600;
 
+const initializeApp = () => {
+  const app = new Application({ width: STAGE_WIDTH, height: STAGE_HEIGHT, backgroundColor: '0x00c3cc' });
+  document.body.appendChild(app.view);
+
+  return app;
+};
+
+const getBirdTextures = (tilesetBaseTexture, tilesetData) => {
+  const birdTiles = [tilesetData[62], tilesetData[66], tilesetData[69], tilesetData[66]];
+  const birdTextures = [];
+
+  birdTiles.forEach((tile) => {
+    const {
+      x, y, width, height,
+    } = tile;
+    const texture = new Texture(tilesetBaseTexture);
+    const rectangle = new Rectangle(x, y, width, height);
+    texture.frame = rectangle;
+    birdTextures.push(texture);
+  });
+
+  return birdTextures;
+};
+
 window.onload = () => {
   const setup = (loader, resources) => {
     //
-    // App creation
-    const app = new Application({ width: STAGE_WIDTH, height: STAGE_HEIGHT, backgroundColor: '0x00c3cc' });
+    // App initialization
+    const app = initializeApp();
+
     const birdContainer = new Container();
     const pipesContainer = new Container();
     app.stage.addChild(pipesContainer);
     app.stage.addChild(birdContainer);
-    document.body.appendChild(app.view);
-
-    // Tileset loading
-    const birdTiles = [tilesetJson[62], tilesetJson[66], tilesetJson[69], tilesetJson[66]];
-    const birdTextures = [];
-    const baseTilesetTexture = resources.tileset.texture.baseTexture;
-
-    birdTiles.forEach((tile) => {
-      const {
-        x, y, width, height,
-      } = tile;
-      const texture = new Texture(baseTilesetTexture);
-      const rectangle = new Rectangle(x, y, width, height);
-      texture.frame = rectangle;
-      birdTextures.push(texture);
-    });
 
     //
     // Bird creation
+    const birdTextures = getBirdTextures(resources.tileset.texture.baseTexture, tilesetJson);
     const bird = new Bird({
-      x: 45,
-      y: 25,
-      textures: birdTextures,
-      stageHeight: STAGE_HEIGHT,
+      x: 45, y: 25, textures: birdTextures, stageHeight: STAGE_HEIGHT,
     });
     birdContainer.addChild(bird.bird);
-
-    //
-    // Sliders handling
-    const thresholdTopSlider = document.getElementById('thresholdTop');
-    let thresholdTop = thresholdTopSlider.valueAsNumber;
-
-    thresholdTopSlider.addEventListener('input', (event) => {
-      thresholdTop = event.target.valueAsNumber;
-    });
 
     //
     // Pipes
@@ -65,6 +63,15 @@ window.onload = () => {
       pipes.push(pipe);
       pipesContainer.addChild(pipe.pipe);
     }, 2500);
+
+    //
+    // Sliders handling
+    const thresholdTopSlider = document.getElementById('thresholdTop');
+    let thresholdTop = thresholdTopSlider.valueAsNumber;
+
+    thresholdTopSlider.addEventListener('input', (event) => {
+      thresholdTop = event.target.valueAsNumber;
+    });
 
     //
     // Volume handling
