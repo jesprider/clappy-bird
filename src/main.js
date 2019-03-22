@@ -7,10 +7,12 @@ import Bird from './bird';
 import Pipe from './pipe';
 
 import tilesetImagePath from './assets/tileset.png';
+import groundImagePath from './assets/ground.png';
+import backgroundImagePath from './assets/background.png';
 import tilesetJson from './assets/tileset.json';
 
 const STAGE_WIDTH = 1020;
-const STAGE_HEIGHT = 600;
+const STAGE_HEIGHT = 624;
 
 const initializeApp = () => {
   const app = new Application({ width: STAGE_WIDTH, height: STAGE_HEIGHT, backgroundColor: '0x00c3cc' });
@@ -36,18 +38,6 @@ const getBirdTextures = (tilesetBaseTexture, tilesetData) => {
   return birdTextures;
 };
 
-const getBgTexture = (tilesetBaseTexture, tilesetData) => {
-  const {
-    x, y, width, height,
-  } = tilesetData[0];
-
-  const texture = new Texture(tilesetBaseTexture);
-  const rectangle = new Rectangle(x, y, width, height);
-  texture.frame = rectangle;
-
-  return texture;
-};
-
 window.onload = () => {
   const setup = (loader, resources) => {
     const tilesetBaseTexture = resources.tileset.texture.baseTexture;
@@ -65,9 +55,16 @@ window.onload = () => {
 
     //
     // Bg creation
-    const bgTexture = getBgTexture(tilesetBaseTexture, tilesetJson);
-    const bg = new TilingSprite(bgTexture, STAGE_WIDTH, STAGE_HEIGHT);
-    gameScene.addChild(bg);
+    const backgroundTexture = resources.background.texture;
+    const background = new TilingSprite(backgroundTexture, STAGE_WIDTH, STAGE_HEIGHT);
+    gameScene.addChild(background);
+
+    //
+    // Ground creation
+    const groundTexture = resources.ground.texture;
+    const ground = new TilingSprite(groundTexture, STAGE_WIDTH, tilesetJson[2].height);
+    ground.y = STAGE_HEIGHT - tilesetJson[2].height;
+    gameScene.addChild(ground);
 
     //
     // Bird creation
@@ -105,25 +102,29 @@ window.onload = () => {
     //
     // App update callback
     app.ticker.add(() => {
-      bg.tilePosition.x -= 2;
+      background.tilePosition.x -= 1;
+      ground.tilePosition.x -= 2;
+
       if (vol > thresholdTop) {
         bird.up(vol);
       }
 
       bird.update();
 
-      for (let i = pipes.length - 1; i >= 0; i -= 1) {
-        pipes[i].update();
+      // for (let i = pipes.length - 1; i >= 0; i -= 1) {
+      //   pipes[i].update();
 
-        if (pipes[i].isOffscreen) {
-          app.stage.removeChild(pipes[i].pipe);
-          pipes.splice(i, 1);
-        }
-      }
+      //   if (pipes[i].isOffscreen) {
+      //     app.stage.removeChild(pipes[i].pipe);
+      //     pipes.splice(i, 1);
+      //   }
+      // }
     });
   };
 
   Loader.shared
     .add('tileset', tilesetImagePath)
+    .add('background', backgroundImagePath)
+    .add('ground', groundImagePath)
     .load(setup);
 };

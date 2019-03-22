@@ -7,7 +7,7 @@ export default class Bird {
     let bird;
     if (textures.length > 1) {
       bird = new AnimatedSprite(textures);
-      bird.animationSpeed = 0.1;
+      bird.animationSpeed = 0.2;
       bird.play();
     } else {
       bird = new Sprite(textures[0]);
