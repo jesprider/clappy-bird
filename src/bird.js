@@ -1,10 +1,17 @@
-import { Sprite } from 'pixi.js';
+import { Sprite, AnimatedSprite } from 'pixi.js';
 
 export default class Bird {
   constructor({
-    x, y, texture, stageHeight,
+    x, y, textures, stageHeight,
   }) {
-    const bird = new Sprite(texture);
+    let bird;
+    if (textures.length > 1) {
+      bird = new AnimatedSprite(textures);
+      bird.animationSpeed = 0.1;
+      bird.play();
+    } else {
+      bird = new Sprite(textures[0]);
+    }
     bird.position.set(x, y);
 
     this.bird = bird;

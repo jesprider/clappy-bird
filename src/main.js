@@ -1,5 +1,5 @@
 import {
-  Application, Container, Loader, Rectangle,
+  Application, Container, Loader, Rectangle, Texture,
 } from 'pixi.js';
 
 import getMedia from './mic';
@@ -24,19 +24,26 @@ window.onload = () => {
     document.body.appendChild(app.view);
 
     // Tileset loading
-    const tilesetTexture = resources.tileset.texture;
-    const {
-      x, y, width, height,
-    } = tilesetJson[66];
-    const rectangle = new Rectangle(x, y, width, height);
-    tilesetTexture.frame = rectangle;
+    const birdTiles = [tilesetJson[62], tilesetJson[66], tilesetJson[69], tilesetJson[66]];
+    const birdTextures = [];
+    const baseTilesetTexture = resources.tileset.texture.baseTexture;
+
+    birdTiles.forEach((tile) => {
+      const {
+        x, y, width, height,
+      } = tile;
+      const texture = new Texture(baseTilesetTexture);
+      const rectangle = new Rectangle(x, y, width, height);
+      texture.frame = rectangle;
+      birdTextures.push(texture);
+    });
 
     //
     // Bird creation
     const bird = new Bird({
       x: 45,
       y: 25,
-      texture: tilesetTexture,
+      textures: birdTextures,
       stageHeight: STAGE_HEIGHT,
     });
     birdContainer.addChild(bird.bird);
