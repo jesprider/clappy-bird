@@ -13,6 +13,7 @@ export default class Bird {
       bird = new Sprite(textures[0]);
     }
     bird.position.set(x, y);
+    bird.anchor.set(0.5, 0.5);
 
     this.bird = bird;
     this.stageHeight = stageHeight;
@@ -31,6 +32,14 @@ export default class Bird {
     this.velocity += this.gravity;
     this.velocity *= 0.9;
     this.bird.y += this.velocity;
+
+    if (this.velocity < 0) {
+      this.bird.rotation = -0.5;
+    } else if (this.velocity < 5) {
+      this.bird.rotation = 0;
+    } else {
+      this.bird.rotation = 0.5;
+    }
 
     if (this.bird.y > this.stageHeight - this.bird.height) {
       this.bird.y = this.stageHeight - this.bird.height;
