@@ -99,6 +99,11 @@ window.onload = () => {
       vol = data;
     });
 
+    window.addEventListener('keydown', (event) => {
+      if (event.keyCode !== 32) return;
+      bird.up(200);
+    });
+
     //
     // App update callback
     app.ticker.add(() => {
