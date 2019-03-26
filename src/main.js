@@ -38,6 +38,23 @@ const getBirdTextures = (tilesetBaseTexture, tilesetData) => {
   return birdTextures;
 };
 
+const getPipesTextures = (tilesetBaseTexture, tilesetData) => {
+  const pipesTiles = [tilesetData[51], tilesetData[52]];
+  const pipesTextures = [];
+
+  pipesTiles.forEach((tile) => {
+    const {
+      x, y, width, height,
+    } = tile;
+    const texture = new Texture(tilesetBaseTexture);
+    const rectangle = new Rectangle(x, y, width, height);
+    texture.frame = rectangle;
+    pipesTextures.push(texture);
+  });
+
+  return pipesTextures;
+};
+
 window.onload = () => {
   const setup = (loader, resources) => {
     const tilesetBaseTexture = resources.tileset.texture.baseTexture;
@@ -76,11 +93,13 @@ window.onload = () => {
 
     //
     // Pipes
+    const pipesTextures = getPipesTextures(tilesetBaseTexture, tilesetJson);
     const pipes = [];
     setInterval(() => {
-      const pipe = new Pipe({ canvasWidth: STAGE_WIDTH, canvasHeight: STAGE_HEIGHT });
+      const pipe = new Pipe({ canvasWidth: STAGE_WIDTH, canvasHeight: STAGE_HEIGHT, textures: pipesTextures });
       pipes.push(pipe);
-      pipesContainer.addChild(pipe.pipe);
+      pipesContainer.addChild(pipe.pipeTop);
+      pipesContainer.addChild(pipe.pipeBottom);
     }, 2500);
 
     //
@@ -116,14 +135,14 @@ window.onload = () => {
 
       bird.update();
 
-      // for (let i = pipes.length - 1; i >= 0; i -= 1) {
-      //   pipes[i].update();
+      for (let i = pipes.length - 1; i >= 0; i -= 1) {
+        pipes[i].update();
 
-      //   if (pipes[i].isOffscreen) {
-      //     app.stage.removeChild(pipes[i].pipe);
-      //     pipes.splice(i, 1);
-      //   }
-      // }
+        if (pipes[i].isOffscreen) {
+          app.stage.removeChild(pipes[i].pipe);
+          pipes.splice(i, 1);
+        }
+      }
     });
   };
 

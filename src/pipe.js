@@ -1,4 +1,4 @@
-import * as pixi from 'pixi.js';
+import { Sprite } from 'pixi.js';
 
 const SPEED = 2;
 const PIPE_WIDTH = 75;
@@ -13,34 +13,38 @@ const getRandomInt = (min, max) => {
 
 
 export default class Pipe {
-  constructor({ canvasHeight, canvasWidth }) {
+  constructor({ canvasHeight, canvasWidth, textures }) {
     const windowHeight = getRandomInt(MINIMUM_WINDOW_HEIGHT, canvasHeight / 2);
     const windowCenter = getRandomInt(windowHeight, canvasHeight - windowHeight);
 
+    const pipeWidth = textures[0].width;
+    const pipeHeight = textures[0].height;
+
     const ht = windowCenter - windowHeight / 2;
     const hb = canvasHeight - (windowCenter + windowHeight / 2);
-    const x = canvasWidth;
-    const yt = 0;
-    const yb = canvasHeight - hb;
+    // const x = canvasWidth;
+    // const yt = 0;
+    // const yb = canvasHeight - hb;
 
-    const pipe = new pixi.Graphics();
-    pipe.lineStyle(0);
-    pipe.beginFill(0xFFFFFF, 1);
-    // -10/+10 for rounded borders compensation
-    pipe.drawRoundedRect(x, yt - 10, PIPE_WIDTH, ht, 10);
-    pipe.drawRoundedRect(x, yb + 10, PIPE_WIDTH, hb, 10);
-    pipe.endFill();
+    this.pipeTop = new Sprite(textures[0]);
+    this.pipeBottom = new Sprite(textures[1]);
 
-    this.pipe = pipe;
+    this.pipeTop.x = canvasWidth;
+    this.pipeBottom.x = canvasWidth;
+
+    this.pipeTop.y = -(pipeHeight - ht);
+    this.pipeBottom.y = canvasHeight - hb;
+
     this.canvasWidth = canvasWidth;
   }
 
   update() {
-    this.pipe.x -= SPEED;
+    this.pipeTop.x -= SPEED;
+    this.pipeBottom.x -= SPEED;
   }
 
   get isOffscreen() {
-    if (this.pipe.x < -(this.canvasWidth + PIPE_WIDTH)) {
+    if (this.pipeTop.x < -(this.canvasWidth + PIPE_WIDTH)) {
       return true;
     }
     return false;
