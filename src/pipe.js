@@ -1,6 +1,6 @@
 import { Sprite } from 'pixi.js';
 
-const SPEED = 2;
+const SPEED = 3;
 const PIPE_WIDTH = 75;
 const MINIMUM_WINDOW_HEIGHT = 150;
 
