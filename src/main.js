@@ -63,25 +63,27 @@ window.onload = () => {
     // App initialization
     const app = initializeApp();
 
-    const gameScene = new Container();
+    const groundContainer = new Container();
+    const backgroundContainer = new Container();
     const birdContainer = new Container();
     const pipesContainer = new Container();
-    app.stage.addChild(gameScene);
+    app.stage.addChild(backgroundContainer);
     app.stage.addChild(pipesContainer);
+    app.stage.addChild(groundContainer);
     app.stage.addChild(birdContainer);
 
     //
     // Bg creation
     const backgroundTexture = resources.background.texture;
     const background = new TilingSprite(backgroundTexture, STAGE_WIDTH, STAGE_HEIGHT);
-    gameScene.addChild(background);
+    backgroundContainer.addChild(background);
 
     //
     // Ground creation
     const groundTexture = resources.ground.texture;
     const ground = new TilingSprite(groundTexture, STAGE_WIDTH, tilesetJson[2].height);
     ground.y = STAGE_HEIGHT - tilesetJson[2].height;
-    gameScene.addChild(ground);
+    groundContainer.addChild(ground);
 
     //
     // Bird creation
