@@ -13,6 +13,7 @@ import tilesetJson from './assets/tileset.json';
 
 const STAGE_WIDTH = 1020;
 const STAGE_HEIGHT = 624;
+const PIPES_FREQUENCY = 120; // 2 sec
 
 const initializeApp = () => {
   const app = new Application({ width: STAGE_WIDTH, height: STAGE_HEIGHT, backgroundColor: '0x00c3cc' });
@@ -97,12 +98,6 @@ window.onload = () => {
     // Pipes
     const pipesTextures = getPipesTextures(tilesetBaseTexture, tilesetJson);
     const pipes = [];
-    setInterval(() => {
-      const pipe = new Pipe({ stageWidth: STAGE_WIDTH, stageHeight: STAGE_HEIGHT, textures: pipesTextures });
-      pipes.push(pipe);
-      pipesContainer.addChild(pipe.pipeTop);
-      pipesContainer.addChild(pipe.pipeBottom);
-    }, 2500);
 
     //
     // Sliders handling
@@ -127,7 +122,16 @@ window.onload = () => {
 
     //
     // App update callback
-    app.ticker.add(() => {
+    let timer = 0;
+    app.ticker.add((delta) => {
+      timer += delta;
+      if (timer > PIPES_FREQUENCY) {
+        const pipe = new Pipe({ stageWidth: STAGE_WIDTH, stageHeight: STAGE_HEIGHT, textures: pipesTextures });
+        pipes.push(pipe);
+        pipesContainer.addChild(pipe.pipeTop);
+        pipesContainer.addChild(pipe.pipeBottom);
+        timer = 0;
+      }
       background.tilePosition.x -= 1;
       ground.tilePosition.x -= 2;
 
