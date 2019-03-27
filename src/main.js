@@ -98,7 +98,7 @@ window.onload = () => {
     const pipesTextures = getPipesTextures(tilesetBaseTexture, tilesetJson);
     const pipes = [];
     setInterval(() => {
-      const pipe = new Pipe({ canvasWidth: STAGE_WIDTH, canvasHeight: STAGE_HEIGHT, textures: pipesTextures });
+      const pipe = new Pipe({ stageWidth: STAGE_WIDTH, stageHeight: STAGE_HEIGHT, textures: pipesTextures });
       pipes.push(pipe);
       pipesContainer.addChild(pipe.pipeTop);
       pipesContainer.addChild(pipe.pipeBottom);

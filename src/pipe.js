@@ -13,15 +13,15 @@ const getRandomInt = (min, max) => {
 
 
 export default class Pipe {
-  constructor({ canvasHeight, canvasWidth, textures }) {
-    const windowHeight = getRandomInt(MINIMUM_WINDOW_HEIGHT, canvasHeight / 2);
-    const windowCenter = getRandomInt(windowHeight, canvasHeight - windowHeight);
+  constructor({ stageWidth, stageHeight, textures }) {
+    const windowHeight = getRandomInt(MINIMUM_WINDOW_HEIGHT, stageHeight / 2);
+    const windowCenter = getRandomInt(windowHeight, stageHeight - windowHeight);
 
     const pipeWidth = textures[0].width;
     const pipeHeight = textures[0].height;
 
     const ht = windowCenter - windowHeight / 2;
-    const hb = canvasHeight - (windowCenter + windowHeight / 2);
+    const hb = stageHeight - (windowCenter + windowHeight / 2);
     // const x = canvasWidth;
     // const yt = 0;
     // const yb = canvasHeight - hb;
@@ -29,13 +29,13 @@ export default class Pipe {
     this.pipeTop = new Sprite(textures[0]);
     this.pipeBottom = new Sprite(textures[1]);
 
-    this.pipeTop.x = canvasWidth;
-    this.pipeBottom.x = canvasWidth;
+    this.pipeTop.x = stageWidth;
+    this.pipeBottom.x = stageWidth;
 
     this.pipeTop.y = -(pipeHeight - ht);
-    this.pipeBottom.y = canvasHeight - hb;
+    this.pipeBottom.y = stageHeight - hb;
 
-    this.canvasWidth = canvasWidth;
+    this.stageWidth = stageWidth;
   }
 
   update() {
@@ -44,7 +44,7 @@ export default class Pipe {
   }
 
   get isOffscreen() {
-    if (this.pipeTop.x < -(this.canvasWidth + PIPE_WIDTH)) {
+    if (this.pipeTop.x < -(this.stageWidth + PIPE_WIDTH)) {
       return true;
     }
     return false;
